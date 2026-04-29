@@ -1,0 +1,10 @@
+/* navbar-sala: estilo personalizado sobre el navbar oscuro de Bootstrap */
+nav {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Efecto hover sobre los enlaces de navegación */
+.nav-link:hover {
+  color: #ffc107 !important;
+  transition: color 0.2s ease;
+}
