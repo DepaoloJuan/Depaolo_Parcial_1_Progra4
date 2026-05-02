@@ -1,1 +1,141 @@
-<p>registro works!</p>
+
+<!-- Pantalla de registro de nuevo usuario -->
+<div class="row justify-content-center">
+  <div class="col-12 col-md-6">
+
+    <!-- Título -->
+    <div class="text-center mb-4">
+      <i class="bi bi-person-plus display-4 text-primary"></i>
+      <h2 class="fw-bold mt-2">Crear Cuenta</h2>
+      <p class="text-muted">Completá tus datos para registrarte</p>
+    </div>
+
+    <!-- Formulario de registro -->
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+
+        <form (ngSubmit)="onSubmit()" #registroForm="ngForm">
+
+          <!-- Nombre y Apellido -->
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <label class="form-label fw-semibold">Nombre</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Tu nombre"
+                [(ngModel)]="nombre"
+                name="nombre"
+                required
+                minlength="2"
+                #nombreField="ngModel"
+              />
+              @if (nombreField.invalid && nombreField.touched) {
+                <div class="text-danger small mt-1">
+                  <i class="bi bi-exclamation-circle me-1"></i>Mínimo 2 caracteres
+                </div>
+              }
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold">Apellido</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Tu apellido"
+                [(ngModel)]="apellido"
+                name="apellido"
+                required
+                minlength="2"
+                #apellidoField="ngModel"
+              />
+              @if (apellidoField.invalid && apellidoField.touched) {
+                <div class="text-danger small mt-1">
+                  <i class="bi bi-exclamation-circle me-1"></i>Mínimo 2 caracteres
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Edad -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Edad</label>
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Tu edad"
+              [(ngModel)]="edad"
+              name="edad"
+              required
+              min="1"
+              max="99"
+              #edadField="ngModel"
+            />
+            @if (edadField.invalid && edadField.touched) {
+              <div class="text-danger small mt-1">
+                <i class="bi bi-exclamation-circle me-1"></i>Ingresá una edad válida
+              </div>
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="tu@email.com"
+              [(ngModel)]="email"
+              name="email"
+              required
+              email
+              #emailField="ngModel"
+            />
+            @if (emailField.invalid && emailField.touched) {
+              <div class="text-danger small mt-1">
+                <i class="bi bi-exclamation-circle me-1"></i>Ingresá un email válido
+              </div>
+            }
+          </div>
+
+          <!-- Contraseña -->
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Mínimo 6 caracteres"
+              [(ngModel)]="password"
+              name="password"
+              required
+              minlength="6"
+              #passField="ngModel"
+            />
+            @if (passField.invalid && passField.touched) {
+              <div class="text-danger small mt-1">
+                <i class="bi bi-exclamation-circle me-1"></i>Mínimo 6 caracteres
+              </div>
+            }
+          </div>
+
+          <!-- Botón submit -->
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+            [disabled]="registroForm.invalid"
+          >
+            <i class="bi bi-person-check me-1"></i>Crear Cuenta
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Link a login -->
+    <p class="text-center mt-3 text-muted">
+      ¿Ya tenés cuenta?
+      <a routerLink="/login" class="text-primary fw-semibold">Iniciá sesión acá</a>
+    </p>
+
+  </div>
+</div>
