@@ -15,6 +15,13 @@
 
         <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
 
+          <!-- Mensaje de error -->
+          @if (errorMensaje()) {
+            <div class="alert alert-danger py-2 small">
+              <i class="bi bi-exclamation-triangle me-1"></i>{{ errorMensaje() }}
+            </div>
+          }
+
           <!-- Campo email -->
           <div class="mb-3">
             <label class="form-label fw-semibold">Email</label>
@@ -58,11 +65,35 @@
           <!-- Botón submit -->
           <button
             type="submit"
-            class="btn btn-primary w-100"
-            [disabled]="loginForm.invalid"
+            class="btn btn-primary w-100 mb-3"
+            [disabled]="loginForm.invalid || cargando()"
           >
-            <i class="bi bi-box-arrow-in-right me-1"></i>Ingresar
+            @if (cargando()) {
+              <span class="spinner-border spinner-border-sm me-2"></span>Ingresando...
+            } @else {
+              <i class="bi bi-box-arrow-in-right me-1"></i>Ingresar
+            }
           </button>
+
+          <!-- Separador -->
+          <hr class="my-3">
+
+          <!-- Botones de acceso rápido -->
+          <p class="text-center text-muted small mb-2">Acceso rápido para pruebas</p>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1"
+              (click)="email='probando@test.com'; password='123456'; onSubmit()">
+              Usuario 1
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1"
+              (click)="email='usuario2@prueba.com'; password='123456'; onSubmit()">
+              Usuario 2
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1"
+              (click)="email='usuario3@prueba.com'; password='123456'; onSubmit()">
+              Usuario 3
+            </button>
+          </div>
 
         </form>
 

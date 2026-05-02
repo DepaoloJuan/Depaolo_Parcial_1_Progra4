@@ -1,11 +1,12 @@
 /**
  * @fileoverview Componente Login — pantalla de inicio de sesión.
  * Utiliza Template-driven forms con ngModel para capturar email y contraseña.
- * En el Sprint #2 se conectará con Supabase Auth para validar las credenciales.
+ * Se conecta con AuthService para validar las credenciales contra Supabase.
  */
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../service/auth';
 
 @Component({
   selector: 'app-login',
@@ -14,15 +15,33 @@ import { RouterLink } from '@angular/router';
   styleUrl: './login.css',
 })
 export class Login {
-  /** Modelo del formulario — se bindea con ngModel en el template */
+  private authService = inject(AuthService);
+
+  // Modelo del formulario — se bindea con ngModel en el template
   email: string = '';
   password: string = '';
 
+  // Signal para manejar el estado de carga mientras espera respuesta de Supabase
+  cargando = signal<boolean>(false);
+
+  // Signal para mostrar errores al usuario sin usar alert()
+  errorMensaje = signal<string | null>(null);
+
   /**
    * Se ejecuta al hacer submit del formulario.
-   * En el Sprint #2 llamará al servicio de autenticación con Supabase.
+   * Llama al AuthService para iniciar sesión con Supabase.
+   * Si hay error, muestra el mensaje correspondiente.
    */
-  onSubmit(): void {
-    console.log('Login:', this.email, this.password);
+  async onSubmit(): Promise<void> {
+    this.cargando.set(true);
+    this.errorMensaje.set(null);
+
+    try {
+      await this.authService.iniciarSesion(this.email, this.password);
+    } catch (error: any) {
+      this.errorMensaje.set('Credenciales incorrectas. Verificá tu email y contraseña.');
+    } finally {
+      this.cargando.set(false);
+    }
   }
 }

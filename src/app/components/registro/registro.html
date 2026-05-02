@@ -15,7 +15,14 @@
 
         <form (ngSubmit)="onSubmit()" #registroForm="ngForm">
 
-          <!-- Nombre y Apellido en la misma fila -->
+          <!-- Mensaje de error -->
+          @if (errorMensaje()) {
+            <div class="alert alert-danger py-2 small">
+              <i class="bi bi-exclamation-triangle me-1"></i>{{ errorMensaje() }}
+            </div>
+          }
+
+          <!-- Nombre y Apellido -->
           <div class="row g-3 mb-3">
             <div class="col-6">
               <label class="form-label fw-semibold">Nombre</label>
@@ -120,9 +127,13 @@
           <button
             type="submit"
             class="btn btn-primary w-100"
-            [disabled]="registroForm.invalid"
+            [disabled]="registroForm.invalid || cargando()"
           >
-            <i class="bi bi-person-check me-1"></i>Crear Cuenta
+            @if (cargando()) {
+              <span class="spinner-border spinner-border-sm me-2"></span>Registrando...
+            } @else {
+              <i class="bi bi-person-check me-1"></i>Crear Cuenta
+            }
           </button>
 
         </form>

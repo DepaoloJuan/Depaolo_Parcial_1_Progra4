@@ -1,10 +1,11 @@
 /**
  * @fileoverview Componente Home — pantalla principal de la Sala de Juegos.
- * Muestra los accesos a los juegos disponibles y los botones de login/registro.
- * En el Sprint #2 se va a adaptar según si el usuario está logueado o no.
+ * Muestra los accesos a los juegos disponibles si el usuario está logueado.
+ * Si no está logueado, muestra los botones de login y registro.
  */
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../service/auth';
 
 @Component({
   selector: 'app-home',
@@ -13,11 +14,22 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.css',
 })
 export class Home {
-  /** Lista de juegos disponibles en la sala */
+  // authService es público para poder acceder a usuarioActual() desde el template
+  authService = inject(AuthService);
+
+  // Lista de juegos disponibles en la sala
   juegos = [
     { nombre: 'Ahorcado', icono: 'bi-alphabet', ruta: '/juegos/ahorcado' },
     { nombre: 'Mayor o Menor', icono: 'bi-suit-spade-fill', ruta: '/juegos/mayor-o-menor' },
     { nombre: 'Preguntados', icono: 'bi-question-circle-fill', ruta: '/juegos/preguntados' },
     { nombre: 'Buscaminas', icono: 'bi-bullseye', ruta: '/juegos/buscaminas' },
   ];
+
+  /**
+   * Cierra la sesión del usuario actual.
+   * Llama al AuthService que se encarga de la navegación.
+   */
+  async cerrarSesion(): Promise<void> {
+    await this.authService.cerrarSesion();
+  }
 }
