@@ -1,1 +1,45 @@
-<p>home works!</p>
+<!-- Pantalla principal de la Sala de Juegos -->
+<div class="row justify-content-center">
+
+  <!-- Título de bienvenida -->
+  <div class="col-12 text-center mb-5">
+    <h1 class="display-5 fw-bold">
+      <i class="bi bi-controller me-2"></i>Sala de Juegos
+    </h1>
+    <p class="text-muted fs-5">Elegí un juego y poné a prueba tus habilidades</p>
+
+    <!-- Botones de login y registro — Sprint #2: se ocultarán si el usuario está logueado -->
+    <div class="d-flex justify-content-center gap-3 mt-3">
+      <a routerLink="/login" class="btn btn-primary">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión
+      </a>
+      <a routerLink="/registro" class="btn btn-outline-primary">
+        <i class="bi bi-person-plus me-1"></i>Registrarse
+      </a>
+    </div>
+  </div>
+
+  <!-- Grilla de juegos -->
+  <div class="col-12">
+    <div class="row g-4 justify-content-center">
+
+      @for (juego of juegos; track juego.ruta) {
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card h-100 text-center shadow-sm juego-card">
+            <div class="card-body py-4">
+              <i class="bi {{ juego.icono }} display-4 text-primary mb-3"></i>
+              <h5 class="card-title fw-semibold">{{ juego.nombre }}</h5>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-4">
+              <a [routerLink]="juego.ruta" class="btn btn-primary btn-sm px-4">
+                <i class="bi bi-play-fill me-1"></i>Jugar
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div>
+  </div>
+
+</div>

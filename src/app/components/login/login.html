@@ -1,1 +1,79 @@
-<p>login works!</p>
+<!-- Pantalla de inicio de sesión -->
+<div class="row justify-content-center">
+  <div class="col-12 col-md-5">
+
+    <!-- Título -->
+    <div class="text-center mb-4">
+      <i class="bi bi-controller display-4 text-primary"></i>
+      <h2 class="fw-bold mt-2">Iniciar Sesión</h2>
+      <p class="text-muted">Ingresá a la Sala de Juegos</p>
+    </div>
+
+    <!-- Formulario de login -->
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+          <!-- Campo email -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="tu@email.com"
+              [(ngModel)]="email"
+              name="email"
+              required
+              email
+              #emailField="ngModel"
+            />
+            @if (emailField.invalid && emailField.touched) {
+              <div class="text-danger small mt-1">
+                <i class="bi bi-exclamation-circle me-1"></i>Ingresá un email válido
+              </div>
+            }
+          </div>
+
+          <!-- Campo contraseña -->
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Mínimo 6 caracteres"
+              [(ngModel)]="password"
+              name="password"
+              required
+              minlength="6"
+              #passField="ngModel"
+            />
+            @if (passField.invalid && passField.touched) {
+              <div class="text-danger small mt-1">
+                <i class="bi bi-exclamation-circle me-1"></i>Mínimo 6 caracteres
+              </div>
+            }
+          </div>
+
+          <!-- Botón submit -->
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+            [disabled]="loginForm.invalid"
+          >
+            <i class="bi bi-box-arrow-in-right me-1"></i>Ingresar
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Link a registro -->
+    <p class="text-center mt-3 text-muted">
+      ¿No tenés cuenta?
+      <a routerLink="/registro" class="text-primary fw-semibold">Registrate acá</a>
+    </p>
+
+  </div>
+</div>

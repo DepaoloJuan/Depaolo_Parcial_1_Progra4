@@ -1,1 +1,137 @@
-<p>quien-soy works!</p>
+<!-- Pantalla de presentación del alumno -->
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8">
+
+    <!-- Estado de carga -->
+    @if (cargando()) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-3">Cargando perfil...</p>
+      </div>
+    }
+
+    <!-- Estado de error -->
+    @if (error()) {
+      <div class="alert alert-danger text-center">
+        <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+      </div>
+    }
+
+    <!-- Perfil cargado -->
+    @if (perfil()) {
+      <!-- Card de perfil -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center gap-4 flex-wrap">
+
+            <!-- Imagen de perfil de GitHub -->
+            <img
+              [src]="perfil()!.avatar_url"
+              [alt]="perfil()!.name"
+              class="perfil-avatar"
+            />
+
+            <!-- Datos del alumno -->
+            <div>
+              <h2 class="fw-bold mb-1">{{ perfil()!.name }}</h2>
+              <p class="text-muted mb-2">
+                <i class="bi bi-github me-1"></i>{{ perfil()!.login }}
+              </p>
+              @if (perfil()!.bio) {
+                <p class="mb-2">{{ perfil()!.bio }}</p>
+              }
+              <div class="d-flex gap-3 text-muted small">
+                <span>
+                  <i class="bi bi-folder me-1"></i>{{ perfil()!.public_repos }} repos
+                </span>
+                <span>
+                  <i class="bi bi-people me-1"></i>{{ perfil()!.followers }} seguidores
+                </span>
+              </div>
+              <a
+                [href]="perfil()!.html_url"
+                target="_blank"
+                class="btn btn-outline-dark btn-sm mt-3"
+              >
+                <i class="bi bi-github me-1"></i>Ver perfil en GitHub
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Card del juego propio -->
+      <div class="card shadow-sm border-primary">
+        <div class="card-header bg-primary text-white fw-semibold">
+          <i class="bi bi-bullseye me-2"></i>Mi Juego Propio — Buscaminas
+        </div>
+        <div class="card-body p-4">
+
+          <h5 class="fw-bold mb-3">¿De qué se trata?</h5>
+          <p>
+            El Buscaminas es un juego de lógica donde el jugador debe descubrir
+            todas las celdas de una grilla sin hacer clic en ninguna mina oculta.
+            Cada celda descubierta muestra un número que indica cuántas minas
+            hay en las celdas adyacentes, lo que permite deducir la ubicación
+            de las minas.
+          </p>
+
+          <h5 class="fw-bold mb-3 mt-4">¿Cómo se juega?</h5>
+          <ul class="list-group list-group-flush mb-3">
+            <li class="list-group-item">
+              <i class="bi bi-1-circle text-primary me-2"></i>
+              Elegís una dificultad: Fácil, Medio o Difícil.
+            </li>
+            <li class="list-group-item">
+              <i class="bi bi-2-circle text-primary me-2"></i>
+              Hacés clic en cualquier celda para empezar.
+            </li>
+            <li class="list-group-item">
+              <i class="bi bi-3-circle text-primary me-2"></i>
+              Los números te indican cuántas minas hay alrededor de esa celda.
+            </li>
+            <li class="list-group-item">
+              <i class="bi bi-4-circle text-primary me-2"></i>
+              Si hacés clic en una mina, ¡perdés!
+            </li>
+            <li class="list-group-item">
+              <i class="bi bi-5-circle text-primary me-2"></i>
+              Si descubrís todas las celdas sin minas, ¡ganás!
+            </li>
+          </ul>
+
+          <h5 class="fw-bold mb-3">Dificultades</h5>
+          <div class="row g-3">
+            <div class="col-4 text-center">
+              <div class="card bg-success text-white">
+                <div class="card-body py-2">
+                  <div class="fw-bold">Fácil</div>
+                  <small>9×9 — 10 minas</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="card bg-warning text-dark">
+                <div class="card-body py-2">
+                  <div class="fw-bold">Medio</div>
+                  <small>16×16 — 40 minas</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="card bg-danger text-white">
+                <div class="card-body py-2">
+                  <div class="fw-bold">Difícil</div>
+                  <small>16×30 — 99 minas</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

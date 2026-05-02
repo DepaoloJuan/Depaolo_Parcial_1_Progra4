@@ -1,0 +1,13 @@
+/* Avatar circular del perfil de GitHub */
+.perfil-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid #0d6efd;
+  object-fit: cover;
+}
+
+/* Tarjetas con bordes redondeados */
+.card {
+  border-radius: 12px;
+}
