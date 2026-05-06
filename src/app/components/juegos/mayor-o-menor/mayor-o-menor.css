@@ -1,0 +1,20 @@
+/* Display de la carta — número grande con emoji del palo */
+.carta-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* Emoji del palo de la carta */
+.carta-emoji {
+  font-size: 4rem;
+}
+
+/* Número de la carta */
+.carta-valor {
+  font-size: 5rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1;
+}
