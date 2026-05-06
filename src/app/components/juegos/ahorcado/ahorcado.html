@@ -1,1 +1,125 @@
-<p>ahorcado works!</p>
+<!-- Juego del Ahorcado -->
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8">
+
+    <!-- Header del juego -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold mb-0">
+        <i class="bi bi-alphabet me-2 text-primary"></i>Ahorcado
+      </h2>
+      <div class="d-flex gap-3 align-items-center">
+        <span class="badge bg-secondary fs-6">
+          <i class="bi bi-clock me-1"></i>{{ tiempoFormateado }}
+        </span>
+        <a routerLink="/home" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-house me-1"></i>Salir
+        </a>
+      </div>
+    </div>
+
+    <!-- Dibujo del ahorcado -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body text-center py-4">
+
+        <!-- Figura SVG del ahorcado -->
+        <svg viewBox="0 0 200 250" width="180" height="180">
+          <!-- Estructura -->
+          <line x1="20" y1="230" x2="180" y2="230" stroke="#333" stroke-width="4"/>
+          <line x1="60" y1="230" x2="60" y2="20" stroke="#333" stroke-width="4"/>
+          <line x1="60" y1="20" x2="130" y2="20" stroke="#333" stroke-width="4"/>
+          <line x1="130" y1="20" x2="130" y2="50" stroke="#333" stroke-width="4"/>
+          <!-- Cabeza -->
+          @if (errores() >= 1) {
+            <circle cx="130" cy="70" r="20" stroke="#e74c3c" stroke-width="3" fill="none"/>
+          }
+          <!-- Cuerpo -->
+          @if (errores() >= 2) {
+            <line x1="130" y1="90" x2="130" y2="150" stroke="#e74c3c" stroke-width="3"/>
+          }
+          <!-- Brazo izquierdo -->
+          @if (errores() >= 3) {
+            <line x1="130" y1="110" x2="100" y2="135" stroke="#e74c3c" stroke-width="3"/>
+          }
+          <!-- Brazo derecho -->
+          @if (errores() >= 4) {
+            <line x1="130" y1="110" x2="160" y2="135" stroke="#e74c3c" stroke-width="3"/>
+          }
+          <!-- Pierna izquierda -->
+          @if (errores() >= 5) {
+            <line x1="130" y1="150" x2="100" y2="190" stroke="#e74c3c" stroke-width="3"/>
+          }
+          <!-- Pierna derecha -->
+          @if (errores() >= 6) {
+            <line x1="130" y1="150" x2="160" y2="190" stroke="#e74c3c" stroke-width="3"/>
+          }
+        </svg>
+
+        <!-- Errores restantes -->
+        <p class="text-muted mt-2">
+          Errores: <strong class="text-danger">{{ errores() }}</strong> / {{ MAX_ERRORES }}
+        </p>
+
+      </div>
+    </div>
+
+    <!-- Palabra a adivinar -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body text-center py-4">
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
+          @for (letra of palabraMostrada(); track $index) {
+            <span class="letra-slot fw-bold fs-3">{{ letra }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultado final -->
+    @if (juegoTerminado()) {
+      <div class="alert text-center mb-4"
+        [class.alert-success]="gano()"
+        [class.alert-danger]="!gano()">
+        @if (gano()) {
+          <i class="bi bi-trophy-fill fs-3 d-block mb-2"></i>
+          <strong class="fs-5">¡Ganaste!</strong>
+          <p class="mb-0 mt-1">La palabra era: <strong>{{ palabra() }}</strong></p>
+        } @else {
+          <i class="bi bi-emoji-frown fs-3 d-block mb-2"></i>
+          <strong class="fs-5">¡Perdiste!</strong>
+          <p class="mb-0 mt-1">La palabra era: <strong>{{ palabra() }}</strong></p>
+        }
+        @if (guardando()) {
+          <p class="small text-muted mt-2">
+            <span class="spinner-border spinner-border-sm me-1"></span>Guardando resultado...
+          </p>
+        }
+        <button class="btn btn-primary mt-3" (click)="iniciarJuego()">
+          <i class="bi bi-arrow-clockwise me-1"></i>Jugar de nuevo
+        </button>
+      </div>
+    }
+
+    <!-- Teclado de letras -->
+    @if (!juegoTerminado()) {
+      <div class="card shadow-sm">
+        <div class="card-body p-3">
+          <p class="text-muted small text-center mb-3">Seleccioná una letra</p>
+          <div class="d-flex flex-wrap justify-content-center gap-2">
+            @for (letra of abecedario; track letra) {
+              <button
+                class="btn btn-letra"
+                [class.btn-success]="letraCorrecta(letra)"
+                [class.btn-danger]="letraUsada(letra) && !letraCorrecta(letra)"
+                [class.btn-outline-secondary]="!letraUsada(letra)"
+                [disabled]="letraUsada(letra) || juegoTerminado()"
+                (click)="seleccionarLetra(letra)"
+              >
+                {{ letra }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>
