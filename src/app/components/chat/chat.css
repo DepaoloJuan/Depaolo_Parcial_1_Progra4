@@ -1,0 +1,44 @@
+/* Contenedor de mensajes con altura fija y scroll */
+.chat-container {
+  height: 450px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Burbuja base para todos los mensajes */
+.mensaje-burbuja {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  word-break: break-word;
+}
+
+/* Mensaje propio — burbuja azul a la derecha */
+.mensaje-propio {
+  background-color: #0d6efd;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+/* Mensaje ajeno — burbuja gris a la izquierda */
+.mensaje-ajeno {
+  background-color: #f0f2f5;
+  color: #1a1a2e;
+  border-bottom-left-radius: 4px;
+}
+
+/* Nombre del remitente en mensajes ajenos */
+.mensaje-autor {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0d6efd;
+  margin-bottom: 2px;
+}
+
+/* Hora del mensaje */
+.mensaje-hora {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  text-align: right;
+}

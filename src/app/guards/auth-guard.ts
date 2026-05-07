@@ -7,16 +7,18 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../service/auth';
 
-export const authGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn = async () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Si hay un usuario logueado, permite el acceso a la ruta
+  // Espera a que Supabase termine de verificar la sesión guardada en localStorage
+  // antes de decidir si el usuario está logueado o no.
+  await authService.sesionVerificada;
+
   if (authService.usuarioActual()) {
     return true;
   }
 
-  // Si no hay usuario, redirige al login
   router.navigate(['/login']);
   return false;
 };

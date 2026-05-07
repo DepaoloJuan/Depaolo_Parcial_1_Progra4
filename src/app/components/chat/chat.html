@@ -1,1 +1,82 @@
-<p>chat works!</p>
+<!-- Sala de Chat en tiempo real -->
+<div class="row justify-content-center">
+  <div class="col-12 col-md-7">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold mb-0">
+        <i class="bi bi-chat-dots-fill me-2 text-primary"></i>Sala de Chat
+      </h2>
+      <a routerLink="/home" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-house me-1"></i>Salir
+      </a>
+    </div>
+
+    <!-- Contenedor de mensajes -->
+    <div class="card shadow-sm mb-3">
+      <div class="card-body chat-container p-3">
+
+        @if (mensajes().length === 0) {
+          <div class="text-center text-muted py-5">
+            <i class="bi bi-chat-square-dots display-4 d-block mb-3"></i>
+            <p>No hay mensajes todavía. ¡Sé el primero en escribir!</p>
+          </div>
+        }
+
+        @for (msg of mensajes(); track msg.id) {
+          <div class="d-flex mb-3"
+            [class.justify-content-end]="esMiMensaje(msg)"
+            [class.justify-content-start]="!esMiMensaje(msg)">
+
+            <div class="mensaje-burbuja"
+              [class.mensaje-propio]="esMiMensaje(msg)"
+              [class.mensaje-ajeno]="!esMiMensaje(msg)">
+
+              <!-- Email del remitente (solo en mensajes ajenos) -->
+              @if (!esMiMensaje(msg)) {
+                <p class="mensaje-autor mb-1">{{ msg.usuario_email }}</p>
+              }
+
+              <!-- Texto del mensaje -->
+              <p class="mb-1">{{ msg.mensaje }}</p>
+
+              <!-- Hora del mensaje -->
+              <p class="mensaje-hora mb-0">{{ formatearHora(msg.created_at) }}</p>
+
+            </div>
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <!-- Input para escribir mensajes -->
+    <div class="card shadow-sm">
+      <div class="card-body p-3">
+        <form (ngSubmit)="enviarMensaje()" class="d-flex gap-2">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Escribí un mensaje..."
+            [(ngModel)]="nuevoMensaje"
+            name="mensaje"
+            [disabled]="enviando()"
+            autocomplete="off"
+          />
+          <button
+            type="submit"
+            class="btn btn-primary px-4"
+            [disabled]="!nuevoMensaje.trim() || enviando()"
+          >
+            @if (enviando()) {
+              <span class="spinner-border spinner-border-sm"></span>
+            } @else {
+              <i class="bi bi-send-fill"></i>
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

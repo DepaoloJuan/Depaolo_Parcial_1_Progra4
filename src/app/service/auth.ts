@@ -20,9 +20,15 @@ export class AuthService {
   // Al ser pública, los componentes pueden leerla directamente desde el template.
   usuarioActual = signal<User | null>(null);
 
+  // Promesa que resuelve cuando la sesión inicial ya fue verificada.
+  // El authGuard la espera para evitar redirigir al login por una race condition.
+  sesionVerificada: Promise<void>;
+  private resolverSesion!: () => void;
+
   constructor() {
-    // Al iniciar la app verificamos si hay una sesión activa guardada
-    // y nos suscribimos a futuros cambios de sesión.
+    this.sesionVerificada = new Promise<void>((resolve) => {
+      this.resolverSesion = resolve;
+    });
     this.verificarSesion();
     this.escucharCambiosDeSesion();
   }
@@ -32,6 +38,7 @@ export class AuthService {
   private async verificarSesion(): Promise<void> {
     const { data } = await this.supabase.client.auth.getSession();
     this.usuarioActual.set(data.session?.user ?? null);
+    this.resolverSesion();
   }
 
   // Se suscribe a los cambios de sesión de Supabase.
