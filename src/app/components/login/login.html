@@ -13,9 +13,9 @@
     <div class="card shadow-sm">
       <div class="card-body p-4">
 
-        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-          <!-- Mensaje de error -->
+          <!-- Mensaje de error general -->
           @if (errorMensaje()) {
             <div class="alert alert-danger py-2 small">
               <i class="bi bi-exclamation-triangle me-1"></i>{{ errorMensaje() }}
@@ -28,16 +28,17 @@
             <input
               type="email"
               class="form-control"
+              formControlName="email"
               placeholder="tu@email.com"
-              [(ngModel)]="email"
-              name="email"
-              required
-              email
-              #emailField="ngModel"
             />
-            @if (emailField.invalid && emailField.touched) {
+            @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
               <div class="text-danger small mt-1">
-                <i class="bi bi-exclamation-circle me-1"></i>Ingresá un email válido
+                @if (loginForm.get('email')?.errors?.['required']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>El email es obligatorio
+                }
+                @if (loginForm.get('email')?.errors?.['email']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>El formato del email es inválido
+                }
               </div>
             }
           </div>
@@ -48,16 +49,17 @@
             <input
               type="password"
               class="form-control"
+              formControlName="password"
               placeholder="Mínimo 6 caracteres"
-              [(ngModel)]="password"
-              name="password"
-              required
-              minlength="6"
-              #passField="ngModel"
             />
-            @if (passField.invalid && passField.touched) {
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
               <div class="text-danger small mt-1">
-                <i class="bi bi-exclamation-circle me-1"></i>Mínimo 6 caracteres
+                @if (loginForm.get('password')?.errors?.['required']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>La contraseña es obligatoria
+                }
+                @if (loginForm.get('password')?.errors?.['minlength']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>Mínimo 6 caracteres
+                }
               </div>
             }
           </div>
@@ -82,15 +84,15 @@
           <p class="text-center text-muted small mb-2">Acceso rápido para pruebas</p>
           <div class="d-flex gap-2">
             <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1"
-              (click)="email='probando@test.com'; password='123456'; onSubmit()">
+              (click)="loginRapido('probando@test.com', '123456')">
               Usuario 1
             </button>
             <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1"
-              (click)="email='usuario2@prueba.com'; password='123456'; onSubmit()">
+              (click)="loginRapido('usuario2@prueba.com', '123456')">
               Usuario 2
             </button>
             <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1"
-              (click)="email='usuario3@prueba.com'; password='123456'; onSubmit()">
+              (click)="loginRapido('usuario3@prueba.com', '123456')">
               Usuario 3
             </button>
           </div>
