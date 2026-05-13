@@ -1,53 +1,56 @@
 /**
  * @fileoverview Componente Registro — pantalla de creación de cuenta.
- * Utiliza Template-driven forms con ngModel para capturar los datos del usuario.
+ * Utiliza Reactive Forms con FormBuilder para capturar los datos del usuario.
  * Se conecta con AuthService para crear la cuenta en Supabase Auth
  * y guardar los datos adicionales en la tabla usuarios.
  */
 import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../service/auth';
 
 @Component({
   selector: 'app-registro',
-  imports: [FormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })
 export class Registro {
+  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-
-  // Modelo del formulario — se bindea con ngModel en el template
-  nombre: string = '';
-  apellido: string = '';
-  edad: number | null = null;
-  email: string = '';
-  password: string = '';
 
   // Signal para manejar el estado de carga
   cargando = signal<boolean>(false);
 
-  // Signal para mostrar errores al usuario sin usar alert()
+  // Signal para mostrar errores sin usar alert()
   errorMensaje = signal<string | null>(null);
+
+  // FormGroup con todos los campos y sus validaciones
+  registroForm = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(2)]],
+    apellido: ['', [Validators.required, Validators.minLength(2)]],
+    edad: [null as number | null, [Validators.required, Validators.min(1), Validators.max(99)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+  });
 
   /**
    * Se ejecuta al hacer submit del formulario.
-   * Llama al AuthService para registrar el usuario en Supabase.
-   * Si hay error, muestra el mensaje correspondiente.
+   * Si el form es inválido, marca todos los campos como tocados para mostrar errores.
+   * Si es válido, intenta registrar el usuario en Supabase.
    */
   async onSubmit(): Promise<void> {
+    if (this.registroForm.invalid) {
+      this.registroForm.markAllAsTouched();
+      return;
+    }
+
     this.cargando.set(true);
     this.errorMensaje.set(null);
 
     try {
-      await this.authService.registrar(
-        this.email,
-        this.password,
-        this.nombre,
-        this.apellido,
-        this.edad!,
-      );
+      const { email, password, nombre, apellido, edad } = this.registroForm.value;
+      await this.authService.registrar(email!, password!, nombre!, apellido!, edad!);
     } catch (error: any) {
       if (error.message?.includes('already registered')) {
         this.errorMensaje.set('Este email ya está registrado. Intentá iniciar sesión.');

@@ -13,7 +13,7 @@
     <div class="card shadow-sm">
       <div class="card-body p-4">
 
-        <form (ngSubmit)="onSubmit()" #registroForm="ngForm">
+        <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
 
           <!-- Mensaje de error -->
           @if (errorMensaje()) {
@@ -29,16 +29,17 @@
               <input
                 type="text"
                 class="form-control"
+                formControlName="nombre"
                 placeholder="Tu nombre"
-                [(ngModel)]="nombre"
-                name="nombre"
-                required
-                minlength="2"
-                #nombreField="ngModel"
               />
-              @if (nombreField.invalid && nombreField.touched) {
+              @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
                 <div class="text-danger small mt-1">
-                  <i class="bi bi-exclamation-circle me-1"></i>Mínimo 2 caracteres
+                  @if (registroForm.get('nombre')?.errors?.['required']) {
+                    <i class="bi bi-exclamation-circle me-1"></i>El nombre es obligatorio
+                  }
+                  @if (registroForm.get('nombre')?.errors?.['minlength']) {
+                    <i class="bi bi-exclamation-circle me-1"></i>Mínimo 2 caracteres
+                  }
                 </div>
               }
             </div>
@@ -47,16 +48,17 @@
               <input
                 type="text"
                 class="form-control"
+                formControlName="apellido"
                 placeholder="Tu apellido"
-                [(ngModel)]="apellido"
-                name="apellido"
-                required
-                minlength="2"
-                #apellidoField="ngModel"
               />
-              @if (apellidoField.invalid && apellidoField.touched) {
+              @if (registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched) {
                 <div class="text-danger small mt-1">
-                  <i class="bi bi-exclamation-circle me-1"></i>Mínimo 2 caracteres
+                  @if (registroForm.get('apellido')?.errors?.['required']) {
+                    <i class="bi bi-exclamation-circle me-1"></i>El apellido es obligatorio
+                  }
+                  @if (registroForm.get('apellido')?.errors?.['minlength']) {
+                    <i class="bi bi-exclamation-circle me-1"></i>Mínimo 2 caracteres
+                  }
                 </div>
               }
             </div>
@@ -68,17 +70,17 @@
             <input
               type="number"
               class="form-control"
+              formControlName="edad"
               placeholder="Tu edad"
-              [(ngModel)]="edad"
-              name="edad"
-              required
-              min="1"
-              max="99"
-              #edadField="ngModel"
             />
-            @if (edadField.invalid && edadField.touched) {
+            @if (registroForm.get('edad')?.invalid && registroForm.get('edad')?.touched) {
               <div class="text-danger small mt-1">
-                <i class="bi bi-exclamation-circle me-1"></i>Ingresá una edad válida
+                @if (registroForm.get('edad')?.errors?.['required']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>La edad es obligatoria
+                }
+                @if (registroForm.get('edad')?.errors?.['min'] || registroForm.get('edad')?.errors?.['max']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>Ingresá una edad válida (1-99)
+                }
               </div>
             }
           </div>
@@ -89,16 +91,17 @@
             <input
               type="email"
               class="form-control"
+              formControlName="email"
               placeholder="tu@email.com"
-              [(ngModel)]="email"
-              name="email"
-              required
-              email
-              #emailField="ngModel"
             />
-            @if (emailField.invalid && emailField.touched) {
+            @if (registroForm.get('email')?.invalid && registroForm.get('email')?.touched) {
               <div class="text-danger small mt-1">
-                <i class="bi bi-exclamation-circle me-1"></i>Ingresá un email válido
+                @if (registroForm.get('email')?.errors?.['required']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>El email es obligatorio
+                }
+                @if (registroForm.get('email')?.errors?.['email']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>El formato del email es inválido
+                }
               </div>
             }
           </div>
@@ -109,16 +112,17 @@
             <input
               type="password"
               class="form-control"
+              formControlName="password"
               placeholder="Mínimo 6 caracteres"
-              [(ngModel)]="password"
-              name="password"
-              required
-              minlength="6"
-              #passField="ngModel"
             />
-            @if (passField.invalid && passField.touched) {
+            @if (registroForm.get('password')?.invalid && registroForm.get('password')?.touched) {
               <div class="text-danger small mt-1">
-                <i class="bi bi-exclamation-circle me-1"></i>Mínimo 6 caracteres
+                @if (registroForm.get('password')?.errors?.['required']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>La contraseña es obligatoria
+                }
+                @if (registroForm.get('password')?.errors?.['minlength']) {
+                  <i class="bi bi-exclamation-circle me-1"></i>Mínimo 6 caracteres
+                }
               </div>
             }
           </div>
