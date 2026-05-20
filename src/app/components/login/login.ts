@@ -1,28 +1,65 @@
 /**
  * @fileoverview Componente Login — pantalla de inicio de sesión.
- * Sprint #1: solo estructura y validaciones del formulario.
- * La conexión con Supabase se agrega en el Sprint #2.
+ * Utiliza Reactive Forms con FormBuilder para capturar email y contraseña.
+ * Se conecta con AuthService para validar las credenciales contra Supabase.
  */
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../service/auth';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
-  /** Modelo del formulario */
-  email: string = '';
-  password: string = '';
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+
+  // Signal para manejar el estado de carga
+  cargando = signal<boolean>(false);
+
+  // Signal para mostrar errores
+  errorMensaje = signal<string | null>(null);
+
+  // FormGroup con validaciones definidas en TypeScript
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+  });
 
   /**
    * Se ejecuta al hacer submit del formulario.
-   * Sprint #2: se conectará con Supabase Auth.
+   * Si el form es inválido, marca todos los campos como tocados para mostrar errores.
+   * Si es válido, intenta iniciar sesión con Supabase.
    */
-  onSubmit(): void {
-    console.log('Login:', this.email, this.password);
+  async onSubmit(): Promise<void> {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.cargando.set(true);
+    this.errorMensaje.set(null);
+
+    try {
+      const { email, password } = this.loginForm.value;
+      await this.authService.iniciarSesion(email!, password!);
+    } catch {
+      this.errorMensaje.set('Credenciales incorrectas. Verificá tu email y contraseña.');
+    } finally {
+      this.cargando.set(false);
+    }
+  }
+
+  /**
+   * Autocompleta las credenciales de un usuario de prueba en el formulario.
+   * @param email - Email del usuario de prueba
+   * @param password - Contraseña del usuario de prueba
+   */
+  loginRapido(email: string, password: string): void {
+    this.loginForm.setValue({ email, password });
   }
 }

@@ -1,6 +1,6 @@
 /**
- * @fileoverview Configuración principal.
- * Aca Definimos los providers globales disponibles en toda la app:
+ * @fileoverview Configuración principal de la aplicación.
+ * Define los providers globales disponibles en toda la app:
  * router, hydration y cliente HTTP.
  */
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
