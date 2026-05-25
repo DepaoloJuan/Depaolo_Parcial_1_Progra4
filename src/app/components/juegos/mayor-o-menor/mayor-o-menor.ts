@@ -83,13 +83,19 @@ export class MayorOMenor implements OnInit {
 
   /**
    * Procesa la elección del jugador (mayor o menor).
-   * Genera la siguiente carta y verifica si acertó.
+   * Genera la siguiente carta asegurándose de que sea distinta a la actual
+   * para evitar empates donde ninguna elección sería correcta.
    * @param eleccion - 'mayor' o 'menor'
    */
   elegir(eleccion: 'mayor' | 'menor'): void {
     if (this.juegoTerminado() || this.mostrarSiguiente()) return;
 
-    const siguiente = this.generarCarta();
+    // Regenera hasta obtener una carta con valor distinto a la actual
+    let siguiente = this.generarCarta();
+    while (siguiente.valor === this.cartaActual()!.valor) {
+      siguiente = this.generarCarta();
+    }
+
     this.cartaSiguiente.set(siguiente);
     this.mostrarSiguiente.set(true);
 
