@@ -1,8 +1,7 @@
 /**
  * @fileoverview Guard de autenticación.
  * Protege las rutas que requieren que el usuario esté logueado.
- * Espera a que Supabase termine de verificar la sesión antes de decidir,
- * evitando redirigir al login por una race condition al recargar la página.
+ * Si el usuario no está autenticado, lo redirige al login.
  */
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
@@ -12,7 +11,8 @@ export const authGuard: CanActivateFn = async () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Espera a que Supabase termine de restaurar la sesión desde localStorage
+  // Espera a que Supabase termine de verificar la sesión guardada en localStorage
+  // antes de decidir si el usuario está logueado o no.
   await authService.sesionVerificada;
 
   if (authService.usuarioActual()) {

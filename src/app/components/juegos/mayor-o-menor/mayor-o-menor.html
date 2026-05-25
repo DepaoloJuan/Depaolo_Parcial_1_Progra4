@@ -1,1 +1,107 @@
-<p>mayor-o-menor works!</p>
+<!-- Juego Mayor o Menor -->
+<div class="row justify-content-center">
+  <div class="col-12 col-md-6">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold mb-0">
+        <i class="bi bi-suit-spade-fill me-2 text-primary"></i>Mayor o Menor
+      </h2>
+      <a routerLink="/home" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-house me-1"></i>Salir
+      </a>
+    </div>
+
+    <!-- Progreso -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="text-muted small">
+        Ronda <strong>{{ cartasAcertadas() + 1 }}</strong> de {{ TOTAL_RONDAS }}
+      </span>
+      <span class="badge bg-success fs-6">
+        <i class="bi bi-check-circle me-1"></i>{{ cartasAcertadas() }} acertadas
+      </span>
+    </div>
+
+    <!-- Carta actual -->
+    @if (cartaActual()) {
+      <div class="card shadow-sm mb-4 text-center">
+        <div class="card-body py-5">
+          <p class="text-muted mb-2">Carta actual</p>
+          <div class="carta-display mb-2">
+            <span class="carta-emoji">{{ cartaActual()!.imagen }}</span>
+            <span class="carta-valor">{{ cartaActual()!.valor }}</span>
+          </div>
+          <p class="text-capitalize text-muted">{{ cartaActual()!.palo }}</p>
+        </div>
+      </div>
+    }
+
+    <!-- Carta siguiente (se muestra después de elegir) -->
+    @if (mostrarSiguiente() && cartaSiguiente()) {
+      <div class="card shadow-sm mb-4 text-center"
+        [class.border-success]="mensaje().includes('Correcto')"
+        [class.border-danger]="mensaje().includes('Incorrecto')">
+        <div class="card-body py-4">
+          <p class="text-muted mb-2">Carta siguiente</p>
+          <div class="carta-display mb-2">
+            <span class="carta-emoji">{{ cartaSiguiente()!.imagen }}</span>
+            <span class="carta-valor">{{ cartaSiguiente()!.valor }}</span>
+          </div>
+          <p class="text-capitalize text-muted">{{ cartaSiguiente()!.palo }}</p>
+          <p class="fw-bold fs-5 mt-2"
+            [class.text-success]="mensaje().includes('Correcto')"
+            [class.text-danger]="mensaje().includes('Incorrecto')">
+            {{ mensaje() }}
+          </p>
+        </div>
+      </div>
+    }
+
+    <!-- Resultado final -->
+    @if (juegoTerminado()) {
+      <div class="alert text-center mb-4"
+        [class.alert-success]="gano()"
+        [class.alert-danger]="!gano()">
+        @if (gano()) {
+          <i class="bi bi-trophy-fill fs-3 d-block mb-2"></i>
+          <strong class="fs-5">¡Ganaste!</strong>
+          <p class="mb-0 mt-1">Acertaste las {{ TOTAL_RONDAS }} rondas</p>
+        } @else {
+          <i class="bi bi-emoji-frown fs-3 d-block mb-2"></i>
+          <strong class="fs-5">¡Perdiste!</strong>
+          <p class="mb-0 mt-1">Acertaste {{ cartasAcertadas() }} de {{ TOTAL_RONDAS }}</p>
+        }
+        @if (guardando()) {
+          <p class="small text-muted mt-2">
+            <span class="spinner-border spinner-border-sm me-1"></span>Guardando resultado...
+          </p>
+        }
+        <button class="btn btn-primary mt-3" (click)="iniciarJuego()">
+          <i class="bi bi-arrow-clockwise me-1"></i>Jugar de nuevo
+        </button>
+      </div>
+    }
+
+    <!-- Botones de elección -->
+    @if (!juegoTerminado()) {
+      @if (!mostrarSiguiente()) {
+        <div class="d-flex gap-3">
+          <button class="btn btn-success flex-grow-1 py-3 fs-5"
+            (click)="elegir('mayor')">
+            <i class="bi bi-arrow-up-circle-fill me-2"></i>Mayor
+          </button>
+          <button class="btn btn-danger flex-grow-1 py-3 fs-5"
+            (click)="elegir('menor')">
+            <i class="bi bi-arrow-down-circle-fill me-2"></i>Menor
+          </button>
+        </div>
+      } @else {
+        <button class="btn btn-primary w-100 py-3 fs-5"
+          (click)="siguienteRonda()">
+          <i class="bi bi-arrow-right-circle-fill me-2"></i>Siguiente carta
+        </button>
+      }
+    }
+
+  </div>
+</div>

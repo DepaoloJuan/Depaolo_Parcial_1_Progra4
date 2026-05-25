@@ -1,1 +1,130 @@
-<p>preguntados works!</p>
+<!-- Juego Preguntados -->
+<div class="row justify-content-center">
+  <div class="col-12 col-md-7">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold mb-0">
+        <i class="bi bi-question-circle-fill me-2 text-primary"></i>Preguntados
+      </h2>
+      <a routerLink="/home" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-house me-1"></i>Salir
+      </a>
+    </div>
+
+    <!-- Estado: cargando -->
+    @if (cargando()) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-3">Cargando preguntas...</p>
+      </div>
+    }
+
+    <!-- Estado: error -->
+    @if (error()) {
+      <div class="alert alert-danger text-center">
+        <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+        <div class="mt-3">
+          <button class="btn btn-primary" (click)="cargarPreguntas()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Reintentar
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Estado: jugando -->
+    @if (!cargando() && !error() && !juegoTerminado()) {
+
+      <!-- Progreso -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted small">
+          Pregunta <strong>{{ indiceActual() + 1 }}</strong> de {{ TOTAL_PREGUNTAS }}
+        </span>
+        <span class="badge bg-success fs-6">
+          <i class="bi bi-check-circle me-1"></i>{{ correctas() }} correctas
+        </span>
+      </div>
+
+      <!-- Barra de progreso -->
+      <div class="progress mb-4" style="height: 6px;">
+        <div
+          class="progress-bar"
+          [style.width.%]="((indiceActual()) / TOTAL_PREGUNTAS) * 100">
+        </div>
+      </div>
+
+      <!-- Pregunta -->
+      @if (preguntaActual) {
+        <div class="card shadow-sm mb-4">
+          <div class="card-body p-4">
+            <p class="text-muted small mb-2">
+              <i class="bi bi-tag me-1"></i>{{ preguntaActual.categoria }}
+            </p>
+            <h5 class="fw-bold mb-4">{{ preguntaActual.enunciado }}</h5>
+
+            <!-- Opciones -->
+            <div class="d-grid gap-2">
+              @for (opcion of preguntaActual.opciones; track opcion) {
+                <button
+                  class="btn text-start px-4 py-3"
+                  [class]="'btn ' + claseBoton(opcion)"
+                  [disabled]="!!respuestaSeleccionada()"
+                  (click)="responder(opcion)">
+                  {{ opcion }}
+                </button>
+              }
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Botón siguiente (aparece después de responder) -->
+        @if (respuestaSeleccionada()) {
+          <div class="text-center">
+            <button class="btn btn-primary px-5" (click)="siguientePregunta()">
+              @if (indiceActual() + 1 < TOTAL_PREGUNTAS) {
+                <i class="bi bi-arrow-right me-1"></i>Siguiente pregunta
+              } @else {
+                <i class="bi bi-flag-fill me-1"></i>Ver resultado
+              }
+            </button>
+          </div>
+        }
+      }
+    }
+
+    <!-- Estado: juego terminado -->
+    @if (juegoTerminado()) {
+      <div class="card shadow-sm text-center">
+        <div class="card-body p-5">
+
+          @if (correctas() >= TOTAL_PREGUNTAS / 2) {
+            <i class="bi bi-trophy-fill display-3 text-warning mb-3 d-block"></i>
+            <h3 class="fw-bold text-success">¡Ganaste!</h3>
+          } @else {
+            <i class="bi bi-emoji-frown display-3 text-secondary mb-3 d-block"></i>
+            <h3 class="fw-bold text-danger">¡Perdiste!</h3>
+          }
+
+          <p class="fs-5 mt-3">
+            Respondiste correctamente
+            <strong class="text-primary">{{ correctas() }} de {{ TOTAL_PREGUNTAS }}</strong>
+            preguntas
+          </p>
+
+          @if (guardando()) {
+            <p class="text-muted small">
+              <span class="spinner-border spinner-border-sm me-1"></span>Guardando resultado...
+            </p>
+          }
+
+          <button class="btn btn-primary px-5 mt-3" (click)="reiniciar()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Jugar de nuevo
+          </button>
+
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

@@ -1,1 +1,111 @@
-<p>buscaminas works!</p>
+<!-- Juego Buscaminas -->
+<div class="row justify-content-center">
+  <div class="col-12">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold mb-0">
+        <i class="bi bi-bullseye me-2 text-primary"></i>Buscaminas
+      </h2>
+      <a routerLink="/home" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-house me-1"></i>Salir
+      </a>
+    </div>
+
+    <!-- Selector de dificultad -->
+    <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
+      @for (entry of DIFICULTADES | keyvalue; track entry.key) {
+        <button
+          class="btn"
+          [class.btn-primary]="dificultadSeleccionada() === entry.key"
+          [class.btn-outline-primary]="dificultadSeleccionada() !== entry.key"
+          (click)="elegirDificultad(entry.key)">
+          {{ entry.value.nombre }}
+          <span class="badge bg-light text-dark ms-1">
+            {{ entry.value.filas }}×{{ entry.value.columnas }}
+          </span>
+        </button>
+      }
+    </div>
+
+    <!-- Panel de estado -->
+    <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+      @if (!juegoTerminado()) {
+        <span class="badge bg-danger fs-6 px-3 py-2">
+          💣 {{ minasSinMarcar() }}
+        </span>
+      } @else {
+        <span class="badge bg-secondary fs-6 px-3 py-2">
+          💣 0
+        </span>
+      }
+      <button class="btn btn-outline-secondary" (click)="iniciarTablero()">
+        <i class="bi bi-arrow-clockwise me-1"></i>Reiniciar
+      </button>
+      <span class="badge bg-secondary fs-6 px-3 py-2">
+        <i class="bi bi-clock me-1"></i>{{ tiempoFormateado }}
+      </span>
+    </div>
+
+    <!-- Resultado -->
+    @if (juegoTerminado()) {
+      <div class="alert text-center mb-3"
+        [class.alert-success]="gano()"
+        [class.alert-danger]="!gano()">
+        @if (gano()) {
+          <i class="bi bi-trophy-fill fs-3 d-block mb-2"></i>
+          <strong class="fs-5">¡Ganaste!</strong>
+          <p class="mb-0 mt-1">Tiempo: {{ tiempoFormateado }}</p>
+        } @else {
+          <i class="bi bi-bomb fs-3 d-block mb-2"></i>
+          <strong class="fs-5">¡Pisaste una mina!</strong>
+        }
+        @if (guardando()) {
+          <p class="small text-muted mt-2">
+            <span class="spinner-border spinner-border-sm me-1"></span>Guardando resultado...
+          </p>
+        }
+      </div>
+
+      <!-- Botón separado del alert -->
+      <div class="text-center mb-4">
+        <button class="btn btn-primary px-5" (click)="iniciarTablero()">
+          <i class="bi bi-arrow-clockwise me-1"></i>Jugar de nuevo
+        </button>
+      </div>
+    }
+
+    <!-- Tablero -->
+    @if (tablero().length > 0) {
+      <div class="tablero-wrapper">
+        <table class="tablero mx-auto">
+          <tbody>
+            @for (fila of tablero(); track $index; let fi = $index) {
+              <tr>
+                @for (celda of fila; track $index; let ci = $index) {
+                  <td
+                    class="celda {{ claseCelda(celda) }}"
+                    (click)="clicCelda(fi, ci)"
+                    (contextmenu)="clicDerecho($event, fi, ci)">
+                    @if (celda.descubierta && !celda.esMina && celda.minasCercanas > 0) {
+                      <span [style.color]="colorNumero(celda.minasCercanas)" class="fw-bold">
+                        {{ celda.minasCercanas }}
+                      </span>
+                    }
+                    @if (celda.descubierta && celda.esMina) {
+                      💣
+                    }
+                    @if (!celda.descubierta && celda.marcada) {
+                      🚩
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+  </div>
+</div>

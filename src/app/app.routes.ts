@@ -8,14 +8,17 @@
  */
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
+import { publicGuard } from './guards/public-guard';
 
 export const routes: Routes = [
   {
     path: 'login',
+    canActivate: [publicGuard],
     loadComponent: () => import('./components/login/login').then((m) => m.Login),
   },
   {
     path: 'registro',
+    canActivate: [publicGuard],
     loadComponent: () => import('./components/registro/registro').then((m) => m.Registro),
   },
   {
@@ -23,8 +26,6 @@ export const routes: Routes = [
     loadComponent: () => import('./components/quien-soy/quien-soy').then((m) => m.QuienSoy),
   },
   {
-    // Ruta padre vacía que agrupa todas las rutas protegidas.
-    // canActivate se evalúa una sola vez para todas sus hijas.
     path: '',
     canActivate: [authGuard],
     children: [
