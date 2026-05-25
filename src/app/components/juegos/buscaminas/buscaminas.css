@@ -1,0 +1,56 @@
+/* Contenedor con scroll horizontal para tableros grandes */
+.tablero-wrapper {
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+/* Tabla del tablero */
+.tablero {
+  border-collapse: collapse;
+}
+
+/* Celda base */
+.celda {
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.85rem;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid #bbb;
+}
+
+/* Celda oculta — aspecto de botón presionable */
+.celda-oculta {
+  background-color: #d1d5db;
+  border-color: #9ca3af;
+}
+
+.celda-oculta:hover {
+  background-color: #b8bcc4;
+}
+
+/* Celda descubierta — fondo claro sin relieve */
+.celda-descubierta {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+  cursor: default;
+}
+
+/* Celda con mina — rojo al perder */
+.celda-mina {
+  background-color: #ef4444;
+  border-color: #dc2626;
+  cursor: default;
+}
+
+/* Celda marcada con bandera */
+.celda-marcada {
+  background-color: #fef9c3;
+  border-color: #fde047;
+}
+
+.celda-marcada:hover {
+  background-color: #fef08a;
+}
