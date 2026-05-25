@@ -8,14 +8,17 @@
  */
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
+import { publicGuard } from './guards/public-guard';
 
 export const routes: Routes = [
   {
     path: 'login',
+    canActivate: [publicGuard],
     loadComponent: () => import('./components/login/login').then((m) => m.Login),
   },
   {
     path: 'registro',
+    canActivate: [publicGuard],
     loadComponent: () => import('./components/registro/registro').then((m) => m.Registro),
   },
   {
